@@ -9,9 +9,9 @@ const taskRouter = require("./routes/taskRoutes");
 app.use("/api/v1", taskRouter);
 
 app.use((err, req, res, next) => {
-  const statuscode = err.statusCode || 500;
+  const statusCode = err.statusCode || 500;
   const message = err.message || "Internal Server Error";
-  return res.status(statuscode).json({
+  return res.status(statusCode).json({
     message,
   });
 });

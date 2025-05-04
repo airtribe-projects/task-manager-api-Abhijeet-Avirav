@@ -7,7 +7,7 @@ const getTasks = async (req, res) => {
   let { tasks } = await readFile(path.join(__dirname, "../task.json"));
   let { completed, sortBy = "createdAt", order = "desc" } = req.query;
   completed =
-    completed === "true" ? (completed === "false" ? false : false) : "";
+    completed === "true" ? (completed === "false" ? false : true) : "";
 
   if (completed) {
     tasks = tasks.filter((task) => task.completed === completed);
@@ -15,11 +15,9 @@ const getTasks = async (req, res) => {
 
   if (sortBy) {
     tasks = tasks.sort((task1, task2) => {
-      if (order === "desc") {
-        return new Date(task2[sortBy]) - new Date(task1[sortBy]);
-      } else {
-        return new Date(task1[sortBy]) - new Date(task2[sortBy]);
-      }
+      return order === "desc"
+        ? task2[sortBy] - task1[sortBy]
+        : task1[sortBy] - task2[sortBy];
     });
   }
 
@@ -85,7 +83,7 @@ const deleteTask = async (req, res, next) => {
   const taskIndex = tasks.findIndex((task) => task.id === id);
 
   if (taskIndex === -1) {
-    return next(`No task with id: ${id}`, 404);
+    return next(new ApiError(`No task with id: ${id}`, 404));
   }
 
   tasks.splice(taskIndex, 1);

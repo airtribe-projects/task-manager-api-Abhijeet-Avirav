@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { validateTask } = require("../Validation/taskValidation");
+const { taskValidationMiddleware } = require("../Validation/taskValidation");
 const taskRouter = Router();
 const {
   getTask,
@@ -12,8 +12,8 @@ const {
 
 taskRouter.get("/tasks", getTasks);
 taskRouter.get("/tasks/:id", getTask);
-taskRouter.post("/tasks", [validateTask], createTask);
-taskRouter.put("/tasks/:id", [validateTask], updateTask);
+taskRouter.post("/tasks", [taskValidationMiddleware], createTask);
+taskRouter.put("/tasks/:id", [taskValidationMiddleware], updateTask);
 taskRouter.delete("/tasks/:id", deleteTask);
 taskRouter.get("/tasks/priority/:level", getTaskByPriority);
 
